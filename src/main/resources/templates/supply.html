@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Supply</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+</head>
+<body>
+<h2 class="col-10 mx-auto" style="margin: .5em 0em">Supply Table</h2>
+
+<div class="col-md-10 col-sm-11 mx-auto">
+    <form th:object="${meatTransaction}" method="post" th:action="@{/supply}">
+        <input type="hidden" th:field="*{type}" name="type" />
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="/supply" style="background-color:#F5F5F5">Total</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/supply/regular" style="background-color:#B0E0E6">Regular</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/supply/spicy" style="background-color:#FA8072">Spicy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/supply/grilled" style="background-color:#FFE4B5">Grilled</a>
+            </li>
+            <li class="nav-item">
+                <input th:value="${displayDate}" type="month" class="form-control" name="displayDate" aria-describedby="dateHelp" style="margin-left: 1.5em">
+            </li>
+            <li>
+                <button type="submit" name="chosenDate" value="true" style="margin: 0 1.5em" class="btn btn-success">View Month</button>
+            </li>
+        </ul>
+    </form>
+</div>
+
+<div class="col-md-10 col-sm-11 mx-auto">
+    <form th:object="${meatTransaction}" method="post" th:action="@{/supply}">
+        <input type="hidden" th:field="*{type}" name="type" />
+        <table class="table table-bordered table-sm" style="margin-bottom: 0px">
+            <thead th:style="${'background-color:' + meatColor}">
+            <tr>
+                <th th:if="${meatType != null}" scope="col">Select</th>
+                <th scope="col">Date</th>
+                <th scope="col">Sold</th>
+                <th scope="col">Waste</th>
+                <th scope="col">Purchased</th>
+                <th scope="col">Sales</th>
+                <th scope="col">Expense</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(meatEntries)}">
+                <td colspan="6" class="text-center">No Data</td>
+            </tr>
+            <tr th:each="meatEntry : ${meatEntries}">
+                <td th:if="${meatType != null}"><input class="form-check-input" type="checkbox" name="selections" th:value="${meatEntry.id}" /></td>
+                <th scope="row" th:text="${#temporals.format(meatEntry.dateOfTransaction, 'MMMM dd, yyyy')}">1</th>
+                <td th:text="${formatter.printPounds(meatEntry.sold)}">Mark</td>
+                <td th:text="${formatter.printPounds(meatEntry.waste)}">Henry</td>
+                <td th:text="${formatter.printPounds(meatEntry.purchase)}">@mark</td>
+                <td th:text="${formatter.printMoney(meatEntry.sales)}"></td>
+                <td th:text="${formatter.printMoney(meatEntry.expense)}"></td>
+            </tr>
+            <tr th:each="totalledEntry : ${totalledEntry}" th:if="${totalledEntry.dateOfTransaction != null}">
+                <td th:if="${meatType != null}"><input class="form-check-input" type="hidden" /></td>
+                <th scope="row" th:text="${#temporals.format(totalledEntry.dateOfTransaction, 'MMMM') + ' Total'}">1</th>
+                <td th:text="${formatter.printPounds(totalledEntry.sold)}" style="font-weight: bold">Mark</td>
+                <td th:text="${formatter.printPounds(totalledEntry.waste)}" style="font-weight: bold">Henry</td>
+                <td th:text="${formatter.printPounds(totalledEntry.purchase)}" style="font-weight: bold">@mark</td>
+                <td th:text="${formatter.printMoney(totalledEntry.sales)}" style="font-weight: bold"></td>
+                <td th:text="${formatter.printMoney(totalledEntry.expense)}" style="font-weight: bold"></td>
+            </tr>
+            <tr th:remove="all">
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>@twitter</td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <button th:if="${meatType != null}" type="submit" name="edit" value="true" style="margin-top: 1em; margin-right: 1em" class="btn btn-primary">Edit</button>
+        <button th:if="${meatType != null}" type="submit" name="delete" value="true" style="margin-top: 1em" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+
+<hr th:if="${meatType}" style="margin: 1em 0em" class="col-md-11 col-sm-12 mx-auto" />
+
+<div th:if="${meatType}" class="col-md-10 col-sm-11 mx-auto" style="padding-bottom: 1em">
+    <h5 th:style="${'background-color:' + meatColor + '; padding: 10px 15px'}" th:with="formMeatType = ${#strings.toLowerCase(meatType)}" th:text="'New ' + ${#strings.capitalize(formMeatType)} + ' Meat Entry:'">New Entry</h5>
+
+    <form th:object="${meatTransaction}" method="post" novalidate th:action="@{/supply}">
+        <input type="hidden" th:field="*{type}" name="type" />
+        <input type="hidden" th:field="*{id}" name="id" />
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input th:field="*{dateOfTransaction}" th:errorclass="is-invalid" type="date" class="form-control" id="date" aria-describedby="dateHelp">
+            <div id="validationDateOfTransaction" class="invalid-feedback" th:errors="*{dateOfTransaction}">
+                Please choose a username.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="sold" class="form-label">Pounds Sold</label>
+            <input th:field="*{sold}" th:errorclass="is-invalid" type="number" class="form-control" id="sold" aria-describedby="soldHelp">
+            <div id="validationSold" class="invalid-feedback" th:errors="*{sold}">
+                Please choose a username.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="waste" class="form-label">Pounds Wasted</label>
+            <input th:field="*{waste}" th:errorclass="is-invalid" type="number" class="form-control" id="waste" aria-describedby="wasteHelp">
+            <div id="validationWaste" class="invalid-feedback" th:errors="*{waste}">
+                Please choose a username.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="purchase" class="form-label">Pounds Purchased</label>
+            <input th:field="*{purchase}" th:errorclass="is-invalid" type="number" class="form-control" id="purchase" aria-describedby="purchaseHelp">
+            <div id="validationPurchase" class="invalid-feedback" th:errors="*{purchase}">
+                Please choose a username.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="sales" class="form-label">Sales Profit</label>
+            <input th:field="*{sales}" th:errorclass="is-invalid" type="number" class="form-control" id="sales" aria-describedby="salesHelp">
+            <div id="validationSales" class="invalid-feedback" th:errors="*{sales}">
+                Please choose a username.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="expense" class="form-label">Expense Cost</label>
+            <input th:field="*{expense}" th:errorclass="is-invalid" type="number" class="form-control" id="expense" aria-describedby="expenseHelp">
+            <div id="validationExpense" class="invalid-feedback" th:errors="*{expense}">
+                Please choose a username.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Entry</button>
+    </form>
+</div>
+
+</body>
+</html>

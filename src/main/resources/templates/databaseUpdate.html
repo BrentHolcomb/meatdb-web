@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Supply</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="col-md-8 col-sm-10 mx-auto">
+    <form method="post">
+        <table class="table">
+            <tr>
+                <th><p>Generate entries for the previous 3 months and entries for this month up to today.</p></th>
+                <th><button type="submit" class="btn btn-primary btn-lg" name="update" value="true">Update Database</button></th>
+            </tr>
+            <tr>
+                <th><p>Remove all entries from the database.</p></th>
+                <th><button type="submit" class="btn btn-danger btn-lg" name="empty" value="true">Empty Database</button></th>
+            </tr>
+        </table>
+    </form>
+
+    <div th:if="${updateMsg}" class="alert alert-primary mx-auto" role="alert" th:text="${updateMsg}">
+        This is a primary alert—check it out!
+    </div>
+    <div th:if="${emptyMsg}" class="alert alert-danger mx-auto" role="alert" th:text="${emptyMsg}">
+        This is a primary alert—check it out!
+    </div>
+</div>
+
+</body>
+</html>
