@@ -1,4 +1,4 @@
-# Meat Database
+# Meat Supply API
 
 ## Inspiration
 
@@ -7,7 +7,7 @@ This database project was inspired by the transactions between Chick-Fil-A and t
 
 ## The Approach
 
-#### A Spring API with an H2 CRUD repository using Java as the backend and Thymeleaf for the UI
+#### A Spring API with an H2 CRUD supported database using Java as the backend and Thymeleaf for the UI
 
 This is a deployed **Spring API** project that returns filtered database entries to the user and offers several ways to upload and edit entries.
 
@@ -22,8 +22,8 @@ I used **JUnit** for **Test Driven Development** to test and create formatters. 
 
 ## Deployed Links
 
-The [deployed project](https://salty-mesa-20902.herokuapp.com/supply) can be viewed at:<br />
-https://salty-mesa-20902.herokuapp.com/supply
+The [deployed project](https://meat-supply-api.herokuapp.com/supply) can be viewed at:<br />
+https://meat-supply-api.herokuapp.com/supply
 
-In case the database appears empty, please follow [this link](https://salty-mesa-20902.herokuapp.com/update) to generate testing entries:<br />
-https://salty-mesa-20902.herokuapp.com/update
+In case the database appears empty, please follow [this link](https://meat-supply-api.herokuapp.com/update) to generate testing entries:<br />
+https://meat-supply-api.herokuapp.com/update
