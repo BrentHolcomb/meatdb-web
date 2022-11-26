@@ -2,6 +2,7 @@ package com.holcomb.meatdbweb.web.controller;
 
 import com.holcomb.meatdbweb.biz.model.MeatTransaction;
 import com.holcomb.meatdbweb.biz.model.MeatType;
+import com.holcomb.meatdbweb.biz.service.DatabaseUpdateService;
 import com.holcomb.meatdbweb.biz.service.MeatTransactionService;
 import com.holcomb.meatdbweb.data.SupplyRepository;
 import com.holcomb.meatdbweb.web.formatter.BigDecimalFormatter;
@@ -26,11 +27,13 @@ public class MeatSupplyController {
 
     private SupplyRepository supplyRepository;
     private MeatTransactionService meatTransactionService;
+    private DatabaseUpdateService databaseUpdateService;
 
     @Autowired
-    public MeatSupplyController(SupplyRepository supplyRepository, MeatTransactionService meatTransactionService) {
+    public MeatSupplyController(SupplyRepository supplyRepository, MeatTransactionService meatTransactionService, DatabaseUpdateService databaseUpdateService) {
         this.supplyRepository = supplyRepository;
         this.meatTransactionService = meatTransactionService;
+        this.databaseUpdateService = databaseUpdateService;
     }
 
     @ModelAttribute("formatter")
@@ -109,6 +112,11 @@ public class MeatSupplyController {
     }
 
     private void modelSetupAndTransactionTypeSet(MeatType meatType, String color, Model model, MeatTransaction meatTransaction) {
+        // update database if empty (This ensures users will have entries to edit/delete/add for testing purposes)
+        if (supplyRepository.count() < 1) {
+            databaseUpdateService.saveGeneratedMeatTransaction();
+        }
+
         if (model.getAttribute("displayDate") == null) {
             model.addAttribute("displayDate", YearMonth.now());
         }
