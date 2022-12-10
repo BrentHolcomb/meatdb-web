@@ -22,5 +22,5 @@ I used **JUnit** for **Test Driven Development** to test and create formatters. 
 
 ## Deployed Link
 
-The [deployed project](https://meat-supply-api.herokuapp.com/supply) can be viewed at:<br />
-https://meat-supply-api.herokuapp.com/supply
+The [deployed project](https://meat-supply-api.herokuapp.com/supply/regular) can be viewed at:<br />
+https://meat-supply-api.herokuapp.com/supply/regular
